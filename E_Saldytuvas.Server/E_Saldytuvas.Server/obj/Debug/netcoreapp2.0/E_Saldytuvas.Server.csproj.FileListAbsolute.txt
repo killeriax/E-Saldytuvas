@@ -1,0 +1,11 @@
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\bin\Debug\netcoreapp2.0\E_Saldytuvas.Server.deps.json
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\bin\Debug\netcoreapp2.0\E_Saldytuvas.Server.runtimeconfig.json
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\bin\Debug\netcoreapp2.0\E_Saldytuvas.Server.runtimeconfig.dev.json
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\bin\Debug\netcoreapp2.0\E_Saldytuvas.Server.dll
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\bin\Debug\netcoreapp2.0\E_Saldytuvas.Server.pdb
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\obj\Debug\netcoreapp2.0\E_Saldytuvas.Server.csproj.CoreCompileInputs.cache
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\obj\Debug\netcoreapp2.0\E_Saldytuvas.Server.AssemblyInfoInputs.cache
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\obj\Debug\netcoreapp2.0\E_Saldytuvas.Server.AssemblyInfo.cs
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\obj\Debug\netcoreapp2.0\E_Saldytuvas.Server.dll
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\obj\Debug\netcoreapp2.0\E_Saldytuvas.Server.pdb
+D:\KTU\7 semestras\Saityno taikomuju programu projektavimas\E-Saldytuvas\E_Saldytuvas.Server\E_Saldytuvas.Server\obj\Debug\netcoreapp2.0\E_Saldytuvas.Server.csprojResolveAssemblyReference.cache
