@@ -5,11 +5,6 @@ using System.Threading.Tasks;
 
 namespace E_Saldytuvas.Server.Models
 {
-    /*public enum Measure
-    {
-        Kg, g, ml
-    }*/
-
     public class Ingredient
     {
         public int Id { get; set; }
@@ -19,7 +14,5 @@ namespace E_Saldytuvas.Server.Models
         public double Amount { get; set; }
 
         public Measure Measure { get; set; }
-
-
     }
 }
