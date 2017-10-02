@@ -129,7 +129,7 @@ namespace E_Saldytuvas.Server.Migrations
                         .HasForeignKey("MeasureId");
 
                     b.HasOne("E_Saldytuvas.Server.Models.Recipe")
-                        .WithMany("Igredients")
+                        .WithMany("Ingredients")
                         .HasForeignKey("RecipeId");
 
                     b.HasOne("E_Saldytuvas.Server.Models.User")

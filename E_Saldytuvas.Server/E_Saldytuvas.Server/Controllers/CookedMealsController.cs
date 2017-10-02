@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -19,7 +18,9 @@ namespace E_Saldytuvas.Server.Controllers
 
             if (_dbContext.CookedMeals.Count() == 0)
             {
-                _dbContext.CookedMeals.Add(new CookedMeal { Size = 0.5 });
+                _dbContext.CookedMeals
+                    .Add(new CookedMeal { Size = 0.5 });
+
                 _dbContext.SaveChanges();
             }
         }
@@ -29,6 +30,7 @@ namespace E_Saldytuvas.Server.Controllers
         public IEnumerable<CookedMeal> GetCookedMeals()
         {
             var cookedMeals = _dbContext.CookedMeals
+                .Include(cm => cm.Recipe)
                 .ToList();
             return cookedMeals;
         }
@@ -37,7 +39,10 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet("{cookedMealId}", Name = "GetCookedMeal")]
         public IActionResult GetCookedMeal(int cookedMealId)
         {
-            var cookedMeal = _dbContext.CookedMeals.FirstOrDefault(cm => cm.Id == cookedMealId);
+            var cookedMeal = _dbContext.CookedMeals
+                .Include(cm => cm.Recipe)
+                .FirstOrDefault(cm => cm.Id == cookedMealId);
+
             if (cookedMeal == null)
             {
                 return NotFound();
@@ -54,7 +59,9 @@ namespace E_Saldytuvas.Server.Controllers
                 return BadRequest();
             }
 
-            _dbContext.CookedMeals.Add(cookedMeal);
+            _dbContext.CookedMeals
+                .Add(cookedMeal);
+
             _dbContext.SaveChanges();
 
             return CreatedAtRoute("GetCookedMeal", new { cookedMealId = cookedMeal.Id }, cookedMeal);
@@ -69,7 +76,10 @@ namespace E_Saldytuvas.Server.Controllers
                 return BadRequest();
             }
 
-            var cookedMeal = _dbContext.CookedMeals.FirstOrDefault(cm => cm.Id == cookedMealId);
+            var cookedMeal = _dbContext.CookedMeals
+                .Include(cm => cm.Recipe)
+                .FirstOrDefault(cm => cm.Id == cookedMealId);
+
             if (cookedMeal == null)
             {
                 return NotFound();
@@ -77,8 +87,11 @@ namespace E_Saldytuvas.Server.Controllers
 
             cookedMeal.Size = cmeal.Size;
 
-            _dbContext.CookedMeals.Update(cookedMeal);
+            _dbContext.CookedMeals
+                .Update(cookedMeal);
+
             _dbContext.SaveChanges();
+
             return new NoContentResult();
         }
 
@@ -86,14 +99,20 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{cookedMealId}")]
         public IActionResult DeleteCookedMeal(int cookedMealId)
         {
-            var cookedMeal = _dbContext.CookedMeals.FirstOrDefault(cm => cm.Id == cookedMealId);
+            var cookedMeal = _dbContext.CookedMeals
+                .Include(cm => cm.Recipe)
+                .FirstOrDefault(cm => cm.Id == cookedMealId);
+
             if (cookedMeal == null)
             {
                 return NotFound();
             }
 
-            _dbContext.CookedMeals.Remove(cookedMeal);
+            _dbContext.CookedMeals
+                .Remove(cookedMeal);
+
             _dbContext.SaveChanges();
+
             return new NoContentResult();
         }
     }

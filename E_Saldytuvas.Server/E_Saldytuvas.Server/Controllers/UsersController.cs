@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -19,7 +18,9 @@ namespace E_Saldytuvas.Server.Controllers
 
             if(_dbContext.Users.Count() == 0)
             {
-                _dbContext.Users.Add(new User { Name = "Vardenis", Surname = "Pavardenis" });
+                _dbContext.Users
+                    .Add(new User { Name = "Vardenis", Surname = "Pavardenis" });
+
                 _dbContext.SaveChanges();
             }
         }
@@ -29,7 +30,12 @@ namespace E_Saldytuvas.Server.Controllers
         public IEnumerable<User> GetUsers()
         {
             var users = _dbContext.Users
+                .Include(u => u.CookedMeals)
+                .Include(u => u.Ingredients)
+                .Include(u => u.Recipes)
+                    //.ThenInclude(r => r.Ingredients)
                 .ToList();
+
             return users;
         }
 
@@ -37,11 +43,17 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet("{userId}", Name = "GetUser")]
         public IActionResult GetUser(int userId)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _dbContext.Users
+                .Include(u => u.CookedMeals)
+                .Include(u => u.Ingredients)
+                .Include(u => u.Recipes)
+                .FirstOrDefault(u => u.Id == userId);
+
             if(user == null)
             {
                 return NotFound();
             }
+
             return new ObjectResult(user);
         }
 
@@ -54,7 +66,9 @@ namespace E_Saldytuvas.Server.Controllers
                 return BadRequest();
             }
 
-            _dbContext.Users.Add(user);
+            _dbContext.Users
+                .Add(user);
+
             _dbContext.SaveChanges();
 
             return CreatedAtRoute("GetUser", new { userId = user.Id }, user);
@@ -69,7 +83,12 @@ namespace E_Saldytuvas.Server.Controllers
                 return BadRequest();
             }
 
-            var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _dbContext.Users
+                .Include(u => u.CookedMeals)
+                .Include(u => u.Ingredients)
+                .Include(u => u.Recipes)
+                .FirstOrDefault(u => u.Id == userId);
+
             if(user == null)
             {
                 return NotFound();
@@ -78,8 +97,11 @@ namespace E_Saldytuvas.Server.Controllers
             user.Name = usr.Name;
             user.Surname = usr.Surname;
 
-            _dbContext.Users.Update(user);
+            _dbContext.Users
+                .Update(user);
+
             _dbContext.SaveChanges();
+
             return new NoContentResult();
         }
 
@@ -87,14 +109,22 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _dbContext.Users
+                .Include(u => u.CookedMeals)
+                .Include(u => u.Ingredients)
+                .Include(u => u.Recipes)
+                .FirstOrDefault(u => u.Id == userId);
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            _dbContext.Users.Remove(user);
+            _dbContext.Users
+                .Remove(user);
+
             _dbContext.SaveChanges();
+
             return new NoContentResult();
         }
     }

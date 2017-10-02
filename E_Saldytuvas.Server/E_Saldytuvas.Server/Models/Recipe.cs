@@ -11,7 +11,7 @@ namespace E_Saldytuvas.Server.Models
 
         public string Title { get; set; }
 
-        public List<Ingredient> Igredients { get; set; }
+        public List<Ingredient> Ingredients { get; set; }
 
         public string Description { get; set; }
     }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
@@ -19,7 +17,9 @@ namespace E_Saldytuvas.Server.Controllers
 
             if (_dbContext.Measures.Count() == 0)
             {
-                _dbContext.Measures.Add(new Measure { Name = "Kg" });
+                _dbContext.Measures
+                    .Add(new Measure { Name = "Kg" });
+
                 _dbContext.SaveChanges();
             }
         }
@@ -30,6 +30,7 @@ namespace E_Saldytuvas.Server.Controllers
         {
             var measures = _dbContext.Measures
                 .ToList();
+
             return measures;
         }
 
@@ -37,11 +38,14 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet("{measureId}", Name = "GetMeasure")]
         public IActionResult GetMeasure(int measureId)
         {
-            var measure = _dbContext.Measures.FirstOrDefault(m => m.Id == measureId);
+            var measure = _dbContext.Measures
+                .FirstOrDefault(m => m.Id == measureId);
+
             if (measure == null)
             {
                 return NotFound();
             }
+
             return new ObjectResult(measure);
         }
 
@@ -54,7 +58,9 @@ namespace E_Saldytuvas.Server.Controllers
                 return BadRequest();
             }
 
-            _dbContext.Measures.Add(measure);
+            _dbContext.Measures
+                .Add(measure);
+
             _dbContext.SaveChanges();
 
             return CreatedAtRoute("GetMeasure", new { measureId = measure.Id }, measure);
@@ -69,7 +75,9 @@ namespace E_Saldytuvas.Server.Controllers
                 return BadRequest();
             }
 
-            var measure = _dbContext.Measures.FirstOrDefault(m => m.Id == measureId);
+            var measure = _dbContext.Measures
+                .FirstOrDefault(m => m.Id == measureId);
+
             if (measure == null)
             {
                 return NotFound();
@@ -77,8 +85,11 @@ namespace E_Saldytuvas.Server.Controllers
 
             measure.Name = msr.Name;
 
-            _dbContext.Measures.Update(measure);
+            _dbContext.Measures
+                .Update(measure);
+
             _dbContext.SaveChanges();
+
             return new NoContentResult();
         }
 
@@ -86,14 +97,19 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{measureId}")]
         public IActionResult DeleteMeasure(int measureId)
         {
-            var measure = _dbContext.Measures.FirstOrDefault(m => m.Id == measureId);
+            var measure = _dbContext.Measures
+                .FirstOrDefault(m => m.Id == measureId);
+
             if (measure == null)
             {
                 return NotFound();
             }
 
-            _dbContext.Measures.Remove(measure);
+            _dbContext.Measures
+                .Remove(measure);
+
             _dbContext.SaveChanges();
+
             return new NoContentResult();
         }
     }
