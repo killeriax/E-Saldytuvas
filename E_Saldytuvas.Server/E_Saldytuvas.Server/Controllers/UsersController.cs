@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
-using Microsoft.EntityFrameworkCore;
+using E_Saldytuvas.Server.Services;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -12,9 +12,12 @@ namespace E_Saldytuvas.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public UsersController(ApplicationDbContext dbContext)
+        private readonly IUserService _userService;
+
+        public UsersController(ApplicationDbContext dbContext, IUserService userService)
         {
             _dbContext = dbContext;
+            _userService = userService;
 
             if(_dbContext.Users.Count() == 0)
             {
@@ -29,25 +32,14 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet]
         public IEnumerable<User> GetUsers()
         {
-            var users = _dbContext.Users
-                .Include(u => u.CookedMeals)
-                .Include(u => u.Ingredients)
-                .Include(u => u.Recipes)
-                    //.ThenInclude(r => r.Ingredients)
-                .ToList();
-
-            return users;
+            return _userService.GetUsers();
         }
 
         // GET api/users/5
         [HttpGet("{userId}", Name = "GetUser")]
         public IActionResult GetUser(int userId)
         {
-            var user = _dbContext.Users
-                .Include(u => u.CookedMeals)
-                .Include(u => u.Ingredients)
-                .Include(u => u.Recipes)
-                .FirstOrDefault(u => u.Id == userId);
+            var user = _userService.GetUser(userId);
 
             if(user == null)
             {
@@ -61,46 +53,31 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpPost]
         public IActionResult AddUser([FromBody] User user)
         {
-            if(user == null)
+            if(_userService.AddUser(user))
+            {
+                return CreatedAtRoute("GetUser", new { userId = user.Id }, user);
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _dbContext.Users
-                .Add(user);
-
-            _dbContext.SaveChanges();
-
-            return CreatedAtRoute("GetUser", new { userId = user.Id }, user);
         }
 
         // PUT api/users/5
         [HttpPut("{userId}")]
         public IActionResult UpdateUser(long userId, [FromBody] User usr)
         {
-            if(usr == null || usr.Id != userId)
+            var result = _userService.UpdateUser(userId, usr);
+
+            if (result == -1)
             {
                 return BadRequest();
             }
 
-            var user = _dbContext.Users
-                .Include(u => u.CookedMeals)
-                .Include(u => u.Ingredients)
-                .Include(u => u.Recipes)
-                .FirstOrDefault(u => u.Id == userId);
-
-            if(user == null)
+            if (result == -2)
             {
                 return NotFound();
             }
-
-            user.Name = usr.Name;
-            user.Surname = usr.Surname;
-
-            _dbContext.Users
-                .Update(user);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }
@@ -109,21 +86,10 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
         {
-            var user = _dbContext.Users
-                .Include(u => u.CookedMeals)
-                .Include(u => u.Ingredients)
-                .Include(u => u.Recipes)
-                .FirstOrDefault(u => u.Id == userId);
-
-            if (user == null)
+            if (_userService.DeleteUser(userId) == false)
             {
                 return NotFound();
             }
-
-            _dbContext.Users
-                .Remove(user);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }

@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
-using Microsoft.EntityFrameworkCore;
+using E_Saldytuvas.Server.Services;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -12,9 +12,12 @@ namespace E_Saldytuvas.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public CookedMealsController(ApplicationDbContext dbContext)
+        private readonly ICookedMealService _cookedMealService;
+
+        public CookedMealsController(ApplicationDbContext dbContext, ICookedMealService cookedMealService)
         {
             _dbContext = dbContext;
+            _cookedMealService = cookedMealService;
 
             if (_dbContext.CookedMeals.Count() == 0)
             {
@@ -29,24 +32,20 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet]
         public IEnumerable<CookedMeal> GetCookedMeals()
         {
-            var cookedMeals = _dbContext.CookedMeals
-                .Include(cm => cm.Recipe)
-                .ToList();
-            return cookedMeals;
+            return _cookedMealService.GetCookedMeals();
         }
 
         // GET api/cookedMeals/5
         [HttpGet("{cookedMealId}", Name = "GetCookedMeal")]
         public IActionResult GetCookedMeal(int cookedMealId)
         {
-            var cookedMeal = _dbContext.CookedMeals
-                .Include(cm => cm.Recipe)
-                .FirstOrDefault(cm => cm.Id == cookedMealId);
+            var cookedMeal = _cookedMealService.GetCookedMeal(cookedMealId);
 
             if (cookedMeal == null)
             {
                 return NotFound();
             }
+
             return new ObjectResult(cookedMeal);
         }
 
@@ -54,43 +53,31 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpPost]
         public IActionResult AddCookedMeal([FromBody] CookedMeal cookedMeal)
         {
-            if (cookedMeal == null)
+            if (_cookedMealService.AddCookedMeal(cookedMeal))
+            {
+                return CreatedAtRoute("GetCookedMeal", new { cookedMealId = cookedMeal.Id }, cookedMeal);
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _dbContext.CookedMeals
-                .Add(cookedMeal);
-
-            _dbContext.SaveChanges();
-
-            return CreatedAtRoute("GetCookedMeal", new { cookedMealId = cookedMeal.Id }, cookedMeal);
         }
 
         // PUT api/cookedMeals/5
         [HttpPut("{cookedMealId}")]
         public IActionResult UpdateCookedMeal(long cookedMealId, [FromBody] CookedMeal cmeal)
         {
-            if (cmeal == null || cmeal.Id != cookedMealId)
+            var result = _cookedMealService.UpdateCookedMeal(cookedMealId, cmeal);
+
+            if ( result == -1)
             {
                 return BadRequest();
             }
 
-            var cookedMeal = _dbContext.CookedMeals
-                .Include(cm => cm.Recipe)
-                .FirstOrDefault(cm => cm.Id == cookedMealId);
-
-            if (cookedMeal == null)
+            if ( result == -2)
             {
                 return NotFound();
             }
-
-            cookedMeal.Size = cmeal.Size;
-
-            _dbContext.CookedMeals
-                .Update(cookedMeal);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }
@@ -99,19 +86,10 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{cookedMealId}")]
         public IActionResult DeleteCookedMeal(int cookedMealId)
         {
-            var cookedMeal = _dbContext.CookedMeals
-                .Include(cm => cm.Recipe)
-                .FirstOrDefault(cm => cm.Id == cookedMealId);
-
-            if (cookedMeal == null)
+            if (_cookedMealService.DeleteCookedMeal(cookedMealId) == false)
             {
                 return NotFound();
             }
-
-            _dbContext.CookedMeals
-                .Remove(cookedMeal);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }

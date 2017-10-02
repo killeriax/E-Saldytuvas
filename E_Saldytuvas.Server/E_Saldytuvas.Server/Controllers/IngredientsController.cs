@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using E_Saldytuvas.Server.Services;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -12,9 +13,12 @@ namespace E_Saldytuvas.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public IngredientsController(ApplicationDbContext dbContext)
+        private readonly IIngredientService _ingredientService;
+
+        public IngredientsController(ApplicationDbContext dbContext, IIngredientService ingredientService)
         {
             _dbContext = dbContext;
+            _ingredientService = ingredientService;
 
             if (_dbContext.Ingredients.Count() == 0)
             {
@@ -29,25 +33,20 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet]
         public IEnumerable<Ingredient> GetIngredients()
         {
-            var ingredients = _dbContext.Ingredients
-                .Include(i => i.Measure)
-                .ToList();
-
-            return ingredients;
+            return _ingredientService.GetIngredients();
         }
 
         // GET api/ingredients/5
         [HttpGet("{ingredientId}", Name = "GetIngredient")]
         public IActionResult GetIngredient(int ingredientId)
         {
-            var ingredient = _dbContext.Ingredients
-                .Include(i => i.Measure)
-                .FirstOrDefault(i => i.Id == ingredientId);
+            var ingredient = _ingredientService.GetIngredient(ingredientId);
 
             if (ingredient == null)
             {
                 return NotFound();
             }
+
             return new ObjectResult(ingredient);
         }
 
@@ -55,43 +54,31 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpPost]
         public IActionResult AddIngredient([FromBody] Ingredient ingredient)
         {
-            if (ingredient == null)
+            if (_ingredientService.AddIngredient(ingredient))
+            {
+                return CreatedAtRoute("GetIngredient", new { ingredientId = ingredient.Id }, ingredient);
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _dbContext.Ingredients
-                .Add(ingredient);
-
-            _dbContext.SaveChanges();
-
-            return CreatedAtRoute("GetIngredient", new { ingredientId = ingredient.Id }, ingredient);
         }
 
         // PUT api/ingredients/5
         [HttpPut("{ingredientId}")]
         public IActionResult UpdateIngredient(long ingredientId, [FromBody] Ingredient ingr)
         {
-            if (ingr == null || ingr.Id != ingredientId)
+            var result = _ingredientService.UpdateIngredient(ingredientId, ingr);
+
+            if (result == -1)
             {
                 return BadRequest();
             }
 
-            var ingredient = _dbContext.Ingredients
-                .FirstOrDefault(i => i.Id == ingredientId);
-
-            if (ingredient == null)
+            if (result == -2)
             {
                 return NotFound();
             }
-
-            ingredient.Name = ingr.Name;
-            ingredient.Amount = ingr.Amount;
-
-            _dbContext.Ingredients
-                .Update(ingredient);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }
@@ -100,18 +87,10 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{ingredientId}")]
         public IActionResult DeleteIngredient(int ingredientId)
         {
-            var ingredient = _dbContext.Ingredients
-                .FirstOrDefault(i => i.Id == ingredientId);
-
-            if (ingredient == null)
+            if (_ingredientService.DeleteIngredient(ingredientId) == false)
             {
                 return NotFound();
             }
-
-            _dbContext.Ingredients
-                .Remove(ingredient);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }

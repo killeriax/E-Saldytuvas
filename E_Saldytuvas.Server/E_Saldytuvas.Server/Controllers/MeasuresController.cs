@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
+using E_Saldytuvas.Server.Services;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -11,9 +12,12 @@ namespace E_Saldytuvas.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public MeasuresController(ApplicationDbContext dbContext)
+        private readonly IMeasureService _measureService;
+
+        public MeasuresController(ApplicationDbContext dbContext, IMeasureService measureService)
         {
             _dbContext = dbContext;
+            _measureService = measureService;
 
             if (_dbContext.Measures.Count() == 0)
             {
@@ -28,18 +32,14 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet]
         public IEnumerable<Measure> GetMeasures()
         {
-            var measures = _dbContext.Measures
-                .ToList();
-
-            return measures;
+            return _measureService.GetMeasures();
         }
 
         // GET api/measures/5
         [HttpGet("{measureId}", Name = "GetMeasure")]
         public IActionResult GetMeasure(int measureId)
         {
-            var measure = _dbContext.Measures
-                .FirstOrDefault(m => m.Id == measureId);
+            var measure = _measureService.GetMeasure(measureId);
 
             if (measure == null)
             {
@@ -53,42 +53,31 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpPost]
         public IActionResult AddMeasure([FromBody] Measure measure)
         {
-            if (measure == null)
+            if (_measureService.AddMeasure(measure))
+            {
+                return CreatedAtRoute("GetMeasure", new { measureId = measure.Id }, measure);
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _dbContext.Measures
-                .Add(measure);
-
-            _dbContext.SaveChanges();
-
-            return CreatedAtRoute("GetMeasure", new { measureId = measure.Id }, measure);
         }
 
         // PUT api/measures/5
         [HttpPut("{measureId}")]
         public IActionResult UpdateMeasure(long measureId, [FromBody] Measure msr)
         {
-            if (msr == null || msr.Id != measureId)
+            var result = _measureService.UpdateMeasure(measureId, msr);
+
+            if (result == -1)
             {
                 return BadRequest();
             }
 
-            var measure = _dbContext.Measures
-                .FirstOrDefault(m => m.Id == measureId);
-
-            if (measure == null)
+            if (result == -2)
             {
                 return NotFound();
             }
-
-            measure.Name = msr.Name;
-
-            _dbContext.Measures
-                .Update(measure);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }
@@ -97,18 +86,10 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{measureId}")]
         public IActionResult DeleteMeasure(int measureId)
         {
-            var measure = _dbContext.Measures
-                .FirstOrDefault(m => m.Id == measureId);
-
-            if (measure == null)
+            if (_measureService.DeleteMeasure(measureId) == false)
             {
                 return NotFound();
             }
-
-            _dbContext.Measures
-                .Remove(measure);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using E_Saldytuvas.Server.Data;
 using Microsoft.EntityFrameworkCore;
+using E_Saldytuvas.Server.Services;
 
 namespace E_Saldytuvas.Server
 {
@@ -26,8 +21,15 @@ namespace E_Saldytuvas.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Application services
+            services.AddTransient<ICookedMealService, CookedMealService>();
+            services.AddTransient<IIngredientService, IngredientService>();
+            services.AddTransient<IMeasureService, MeasureService>();
+            services.AddTransient<IRecipeService, RecipeService>();
+            services.AddTransient<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

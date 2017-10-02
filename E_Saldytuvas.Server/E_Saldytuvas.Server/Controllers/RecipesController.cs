@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
-using Microsoft.EntityFrameworkCore;
+using E_Saldytuvas.Server.Services;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -12,9 +12,12 @@ namespace E_Saldytuvas.Server.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public RecipesController(ApplicationDbContext dbContext)
+        private readonly IRecipeService _recipeService;
+
+        public RecipesController(ApplicationDbContext dbContext, IRecipeService recipeService)
         {
             _dbContext = dbContext;
+            _recipeService = recipeService;
 
             if (_dbContext.Recipes.Count() == 0)
             {
@@ -29,20 +32,14 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpGet]
         public IEnumerable<Recipe> GetRecipes()
         {
-            var recipes = _dbContext.Recipes
-                .Include(r => r.Ingredients)
-                .ToList();
-
-            return recipes;
+            return _recipeService.GetRecipes();
         }
 
         // GET api/recipes/5
         [HttpGet("{recipeId}", Name = "GetRecipe")]
         public IActionResult GetRecipe(int recipeId)
         {
-            var recipe = _dbContext.Recipes
-                .Include(r => r.Ingredients)
-                .FirstOrDefault(r => r.Id == recipeId);
+            var recipe = _recipeService.GetRecipe(recipeId);
 
             if (recipe == null)
             {
@@ -55,44 +52,31 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpPost]
         public IActionResult AddRecipe([FromBody] Recipe recipe)
         {
-            if (recipe == null)
+            if (_recipeService.AddRecipe(recipe))
+            {
+                return CreatedAtRoute("GetRecipe", new { recipeId = recipe.Id }, recipe);
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _dbContext.Recipes
-                .Add(recipe);
-
-            _dbContext.SaveChanges();
-
-            return CreatedAtRoute("GetRecipe", new { recipeId = recipe.Id }, recipe);
         }
 
         // PUT api/recipes/5
         [HttpPut("{recipeId}")]
         public IActionResult UpdateRecipe(long recipeId, [FromBody] Recipe rcp)
         {
-            if (rcp == null || rcp.Id != recipeId)
+            var result = _recipeService.UpdateRecipe(recipeId, rcp);
+
+            if (result == -1)
             {
                 return BadRequest();
             }
 
-            var recipe = _dbContext.Recipes
-                .Include(r => r.Ingredients)
-                .FirstOrDefault(r => r.Id == recipeId);
-
-            if (recipe == null)
+            if (result == -2)
             {
                 return NotFound();
             }
-
-            recipe.Title = rcp.Title;
-            recipe.Description = rcp.Description;
-
-            _dbContext.Recipes
-                .Update(recipe);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }
@@ -101,19 +85,10 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpDelete("{recipeId}")]
         public IActionResult DeleteRecipe(int recipeId)
         {
-            var recipe = _dbContext.Recipes
-                .Include(r => r.Ingredients)
-                .FirstOrDefault(r => r.Id == recipeId);
-
-            if (recipe == null)
+            if (_recipeService.DeleteRecipe(recipeId) == false)
             {
                 return NotFound();
             }
-
-            _dbContext.Recipes
-                .Remove(recipe);
-
-            _dbContext.SaveChanges();
 
             return new NoContentResult();
         }
