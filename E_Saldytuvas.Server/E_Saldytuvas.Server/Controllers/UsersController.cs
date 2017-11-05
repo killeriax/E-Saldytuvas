@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
 using E_Saldytuvas.Server.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Saldytuvas.Server.Controllers
 {
@@ -26,6 +27,44 @@ namespace E_Saldytuvas.Server.Controllers
 
                 _dbContext.SaveChanges();
             }
+        }
+
+        [Authorize]
+        [HttpGet("claims")]
+        public object Claims()
+        {
+            return User.Claims
+                .Select(c => new
+                {
+                    Type = c.Type,
+                    Value = c.Value
+                });
+        }
+
+        [Authorize]
+        [HttpPost("register")]
+        public IActionResult Register()
+        {
+            var type = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+
+            var claims = User.Claims
+                .Select(c => new
+                {
+                    c.Type,
+                    c.Value
+                });
+
+            var authId = claims.SingleOrDefault(c => c.Type == type)?.Value;
+
+            if (authId == null)
+                return BadRequest("Invalid token provided");
+
+            var success = _userService.RegisterUser(authId);
+
+            if (!success)
+                return BadRequest();
+
+            return NoContent();
         }
 
         // GET api/users

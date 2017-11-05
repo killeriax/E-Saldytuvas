@@ -15,6 +15,25 @@ namespace E_Saldytuvas.Server.Services
             _dbContext = dbContext;
         }
 
+        public bool RegisterUser(string authId)
+        {
+            var userIsFound = _dbContext.Users
+                .SingleOrDefault(u => u.AuthId == authId);
+
+            if (userIsFound != null)
+                return false;
+
+            var user = new User
+            {
+                AuthId = authId
+            };
+
+            _dbContext.Users.Add(user);
+            _dbContext.SaveChanges();
+
+            return true;
+        }
+
         public IEnumerable<User> GetUsers()
         {
             var users = _dbContext.Users

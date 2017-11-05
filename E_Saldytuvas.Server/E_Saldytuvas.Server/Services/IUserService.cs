@@ -10,5 +10,6 @@ namespace E_Saldytuvas.Server.Services
         bool AddUser(User user);
         int UpdateUser(long userId, User usr);
         bool DeleteUser(int userId);
+        bool RegisterUser(string authId);
     }
 }

@@ -101,6 +101,8 @@ namespace E_Saldytuvas.Server.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("AuthId");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Surname");
