@@ -1,8 +1,10 @@
 ﻿using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace E_Saldytuvas.Server.Services
 {
@@ -15,13 +17,13 @@ namespace E_Saldytuvas.Server.Services
             _dbContext = dbContext;
         }
 
-        public bool RegisterUser(string authId)
+        public User RegisterUser(string authId)
         {
             var userIsFound = _dbContext.Users
                 .SingleOrDefault(u => u.AuthId == authId);
 
             if (userIsFound != null)
-                return false;
+                return null;
 
             var user = new User
             {
@@ -31,7 +33,7 @@ namespace E_Saldytuvas.Server.Services
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
-            return true;
+            return user;
         }
 
         public IEnumerable<User> GetUsers()
@@ -119,6 +121,22 @@ namespace E_Saldytuvas.Server.Services
             _dbContext.SaveChanges();
 
             return true;
+        }
+
+        public string GetUserAuthId(ClaimsPrincipal claimsPrincipal)
+        {
+            var type = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+
+            var claims = claimsPrincipal.Claims
+                .Select(c => new
+                {
+                    c.Type,
+                    c.Value
+                });
+
+            var authId = claims.SingleOrDefault(c => c.Type == type)?.Value;
+
+            return authId;
         }
     }
 }

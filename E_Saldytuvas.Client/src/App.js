@@ -1,42 +1,61 @@
-import React, {Component} from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { Navbar, Button } from 'react-bootstrap';
 import './App.css';
-import Auth from './auth/Auth';
-import {getBackEndUrl} from './environment';
 
 class App extends Component {
-    state = {
-        zmones: [{name: 'zzz'}]
-    };
-    auth = new Auth();
+    goTo(route) {
+        this.props.history.replace(`/${route}`)
+    }
 
-    async componentDidMount() {
-        const params = {
-          mode: 'cors'
-        };
-        const response = await fetch(`${getBackEndUrl()}/api/users`, params);
-        const json = await response.json();
-        console.log(json);
+    login() {
+        this.props.auth.login();
+    }
 
-        this.setState({zmones: json});
+    logout() {
+        this.props.auth.logout();
     }
 
     render() {
+        const { isAuthenticated } = this.props.auth;
+
         return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <h1 className="App-title">Welcome to React</h1>
-                </header>
-                <p className="App-intro">
-                    To get started, edit <code>src/App.js</code> and save to reload.
-                </p>
-                <div>
-                    {this.state.zmones.map((zmogus, i) => (
-                        <div key={i}>{zmogus.name}</div>
-                    ))}
-                </div>
-                <button onClick={() => this.auth.login()}>Click me</button>
+            <div>
+                <Navbar fluid>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <a href="">e-Šaldytuvas</a>
+                        </Navbar.Brand>
+                        <Button
+                            bsStyle="primary"
+                            className="btn-margin"
+                            onClick={this.goTo.bind(this, 'home')}
+                        >
+                            Pradžia
+                        </Button>
+                        {
+                            !isAuthenticated() && (
+                                <Button
+                                    bsStyle="primary"
+                                    className="btn-margin"
+                                    onClick={this.login.bind(this)}
+                                >
+                                    Prisijungti
+                                </Button>
+                            )
+                        }
+                        {
+                            isAuthenticated() && (
+                                <Button
+                                    bsStyle="primary"
+                                    className="btn-margin"
+                                    onClick={this.logout.bind(this)}
+                                >
+                                    Atsijungti
+                                </Button>
+                            )
+                        }
+                    </Navbar.Header>
+                </Navbar>
             </div>
         );
     }

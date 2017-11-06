@@ -1,5 +1,6 @@
 ﻿using E_Saldytuvas.Server.Models;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace E_Saldytuvas.Server.Services
 {
@@ -10,6 +11,7 @@ namespace E_Saldytuvas.Server.Services
         bool AddUser(User user);
         int UpdateUser(long userId, User usr);
         bool DeleteUser(int userId);
-        bool RegisterUser(string authId);
+        User RegisterUser(string authId);
+        string GetUserAuthId(ClaimsPrincipal claimsPrincipal);
     }
 }

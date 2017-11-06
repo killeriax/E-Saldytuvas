@@ -45,26 +45,17 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpPost("register")]
         public IActionResult Register()
         {
-            var type = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
-
-            var claims = User.Claims
-                .Select(c => new
-                {
-                    c.Type,
-                    c.Value
-                });
-
-            var authId = claims.SingleOrDefault(c => c.Type == type)?.Value;
+            var authId = _userService.GetUserAuthId(User);
 
             if (authId == null)
                 return BadRequest("Invalid token provided");
 
-            var success = _userService.RegisterUser(authId);
+            var user = _userService.RegisterUser(authId);
 
-            if (!success)
+            if (user == null)
                 return BadRequest();
 
-            return NoContent();
+            return Created($"api/users/${user.Id}", user.Id);
         }
 
         // GET api/users
@@ -103,6 +94,7 @@ namespace E_Saldytuvas.Server.Controllers
         }
 
         // PUT api/users/5
+        [Authorize]
         [HttpPut("{userId}")]
         public IActionResult UpdateUser(long userId, [FromBody] User usr)
         {
@@ -122,6 +114,7 @@ namespace E_Saldytuvas.Server.Controllers
         }
 
         // DELETE api/users/5
+        [Authorize]
         [HttpDelete("{userId}")]
         public IActionResult DeleteUser(int userId)
         {

@@ -1,4 +1,6 @@
-﻿namespace E_Saldytuvas.Server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace E_Saldytuvas.Server.Models
 {
     public class CookedMeal
     {
@@ -6,6 +8,7 @@
 
         public Recipe Recipe { get; set; }
 
+        [Required]
         public double Size { get; set; }
     }
 }
