@@ -9,7 +9,8 @@ namespace E_Saldytuvas.Server.Services
         IEnumerable<User> GetUsers();
         User GetUser(int userId);
         bool AddUser(User user);
-        int UpdateUser(long userId, User usr);
+        //int UpdateUser(long userId, User usr);
+        int UpdateUser(long userId, string userAuthId, User usr);
         bool DeleteUser(int userId);
         User RegisterUser(string authId);
         string GetUserAuthId(ClaimsPrincipal claimsPrincipal);

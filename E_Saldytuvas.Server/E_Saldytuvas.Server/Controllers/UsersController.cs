@@ -98,11 +98,20 @@ namespace E_Saldytuvas.Server.Controllers
         [HttpPut("{userId}")]
         public IActionResult UpdateUser(long userId, [FromBody] User usr)
         {
-            var result = _userService.UpdateUser(userId, usr);
+            var authId = _userService.GetUserAuthId(User);
+
+            if (authId == null)
+                return BadRequest("Invalid token provided");
+
+            //var user = _userService.RegisterUser(authId);
+
+            //var result = _userService.UpdateUser(userId, usr);
+            var result = _userService.UpdateUser(userId, authId, usr);
 
             if (result == -1)
             {
-                return BadRequest();
+                return Unauthorized();
+                //return BadRequest();
             }
 
             if (result == -2)

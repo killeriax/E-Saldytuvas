@@ -73,7 +73,7 @@ namespace E_Saldytuvas.Server.Services
             return true;
         }
 
-        public int UpdateUser(long userId, User usr)
+        /*public int UpdateUser(long userId, User usr)
         {
             if (usr == null || usr.Id != userId)
             {
@@ -85,6 +85,36 @@ namespace E_Saldytuvas.Server.Services
                 .Include(u => u.Ingredients)
                 .Include(u => u.Recipes)
                 .FirstOrDefault(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return -2;
+            }
+
+            user.Name = usr.Name;
+            user.Surname = usr.Surname;
+
+            _dbContext.Users
+                .Update(user);
+
+            _dbContext.SaveChanges();
+
+            return 1;
+        }*/
+
+        public int UpdateUser(long userId, string userAuthId, User usr)
+        {
+
+            var user = _dbContext.Users
+                .Include(u => u.CookedMeals)
+                .Include(u => u.Ingredients)
+                .Include(u => u.Recipes)
+                .FirstOrDefault(u => u.Id == userId);
+
+            if (usr == null || user.AuthId != userAuthId)
+            {
+                return -1;
+            }
 
             if (user == null)
             {
