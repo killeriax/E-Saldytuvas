@@ -110,7 +110,7 @@ namespace E_Saldytuvas.Server.Controllers
 
             if (result == -1)
             {
-                return Unauthorized();
+                return Forbid();
                 //return BadRequest();
             }
 
