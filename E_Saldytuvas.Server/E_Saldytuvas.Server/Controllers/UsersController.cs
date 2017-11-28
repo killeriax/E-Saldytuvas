@@ -29,7 +29,7 @@ namespace E_Saldytuvas.Server.Controllers
             }
         }
 
-        [Authorize]
+        /*[Authorize]
         [HttpGet("claims")]
         public object Claims()
         {
@@ -39,7 +39,7 @@ namespace E_Saldytuvas.Server.Controllers
                     Type = c.Type,
                     Value = c.Value
                 });
-        }
+        }*/
 
         [Authorize]
         [HttpPost("register")]

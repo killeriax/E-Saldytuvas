@@ -2,11 +2,11 @@ import history from '../history';
 import auth0 from 'auth0-js';
 import { getBackEndUrl } from "../environment";
 
-export default class Auth {
+class Auth {
     auth0 = new auth0.WebAuth({
         domain: 'e-saldytuvas.eu.auth0.com',
         clientID: 'Do0KVo9zhqu9Bt0njUyqE7RKh08lIqH4',
-        redirectUri: 'http://localhost:3000/callback',
+        redirectUri: 'http://localhost:3000/authenticate',
         audience: 'https://e-saldytuvas.eu.auth0.com/api/v2/',
         responseType: 'token id_token',
         scope: 'openid'
@@ -15,7 +15,7 @@ export default class Auth {
     constructor() {
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
-        this.handleAuthentication = this.handleAuthentication.bind(this);
+        //this.handleAuthentication = this.handleAuthentication.bind(this);
         this.isAuthenticated = this.isAuthenticated.bind(this);
         this.scheduleRenewal();
     }
@@ -24,7 +24,7 @@ export default class Auth {
         this.auth0.authorize();
     }
 
-    handleAuthentication() {
+    /*handleAuthentication() {
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 this.setSession(authResult);
@@ -35,7 +35,22 @@ export default class Auth {
                 alert(`Error: ${err.error}. Check the console for further details.`);
             }
         });
-    }
+    }*/
+
+    handleAuthentication = () => {
+        return new Promise((resolve) => {
+            this.auth0.parseHash((err, authResult) => {
+                if (authResult && authResult.accessToken && authResult.idToken) {
+                    this.setSession(authResult);
+                    resolve(true);
+                } else if (err) {
+                    console.error('Could not handle authentication', err);
+                    resolve(false);
+                }
+                resolve(false);
+            });
+        });
+    };
 
     setSession(authResult) {
         // Set the time that the access token will expire at
@@ -95,3 +110,5 @@ export default class Auth {
         }
     }
 }
+
+export default new Auth();

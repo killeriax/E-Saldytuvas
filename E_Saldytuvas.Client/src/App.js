@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+import { Navbar, Button, Nav, NavItem } from 'react-bootstrap';
 import './App.css';
+import Background from './images/index.jpeg';
+import windowSize from 'react-window-size';
 
 class App extends Component {
     goTo(route) {
@@ -18,47 +20,80 @@ class App extends Component {
     render() {
         const { isAuthenticated } = this.props.auth;
 
+        var divStyle = {};
+
+        if(!isAuthenticated()) {
+            divStyle = {
+                width: this.props.windowWidth,
+                height: this.props.windowHeight,
+                backgroundImage: "url(" + Background + ")",
+                backgroundSize: "cover"
+            };
+        }
+
+        var namePosition = {
+            marginTop: "15%",
+            marginLeft: "30%"
+        }
+
+        var titleStyle = {
+            fontFamily: "'Press Start 2P', cursive"
+        }
+
         return (
-            <div>
-                <Navbar fluid>
+            <div style={ divStyle }>
+                <Navbar inverse collapseOnSelect>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <a href="">e-Šaldytuvas</a>
+                            <a href="" style={titleStyle}>e-Šaldytuvas</a>
                         </Navbar.Brand>
-                        <Button
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Nav>
+                        <NavItem><Button
                             bsStyle="primary"
                             className="btn-margin"
                             onClick={this.goTo.bind(this, 'home')}
                         >
                             Pradžia
-                        </Button>
-                        {
-                            !isAuthenticated() && (
-                                <Button
-                                    bsStyle="primary"
-                                    className="btn-margin"
-                                    onClick={this.login.bind(this)}
-                                >
-                                    Prisijungti
-                                </Button>
-                            )
-                        }
-                        {
-                            isAuthenticated() && (
-                                <Button
-                                    bsStyle="primary"
-                                    className="btn-margin"
-                                    onClick={this.logout.bind(this)}
-                                >
-                                    Atsijungti
-                                </Button>
-                            )
-                        }
-                    </Navbar.Header>
+                        </Button></NavItem>
+                    {
+                        !isAuthenticated() && (
+                            <NavItem><Button
+                                bsStyle="primary"
+                                className="btn-margin"
+                                onClick={this.login.bind(this)}
+                            >
+                                Prisijungti
+                            </Button></NavItem>
+                        )
+                    }
+                    {
+                        isAuthenticated() && (
+                            <NavItem><Button
+                                bsStyle="primary"
+                                className="btn-margin"
+                                onClick={this.logout.bind(this)}
+                            >
+                                Atsijungti
+                            </Button></NavItem>
+                        )
+                    }
+                        </Nav>
+                        <Nav pullRight>
+                            <NavItem><Button>Button1</Button></NavItem>
+                            <NavItem><Button>Button2</Button></NavItem>
+                            <NavItem><Button>Button3</Button></NavItem>
+                            <NavItem><Button>Button4</Button></NavItem>
+                        </Nav>
+                    </Navbar.Collapse>
                 </Navbar>
+                <h1 style={namePosition}>e-Šaldytuvas</h1>
             </div>
         );
     }
 }
 
-export default App;
+//export default App;
+export default windowSize(App);

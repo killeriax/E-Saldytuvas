@@ -16,7 +16,7 @@ class Home extends Component {
             )
         }
         {
-          !isAuthenticated() && (
+          /*!isAuthenticated() && (
               <h4>
                 Jūs neprisijungę! Norėdami tęsti, {' '}
                 <a
@@ -26,7 +26,7 @@ class Home extends Component {
                   prisijunkite.
                 </a>
               </h4>
-            )
+            )*/
         }
       </div>
     );
