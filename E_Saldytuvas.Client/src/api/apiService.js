@@ -40,6 +40,28 @@ export function post(url, {body, authorized}) {
     return fetch(`${baseUrl}${url}`, params);
 }
 
+export function put(url, {body, authorized}) {
+    const baseUrl = getBackEndUrl();
+
+    const params = {
+        method: 'PUT',
+        body: JSON.stringify(body),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        cache: 'default'
+    };
+
+    if (authorized) {
+        const accessToken = localStorage.getItem('access_token');
+        params.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    return fetch(`${baseUrl}${url}`, params);
+}
+
 export function del(url, {body, authorized}) {
     const baseUrl = getBackEndUrl();
 
@@ -65,5 +87,6 @@ export function del(url, {body, authorized}) {
 export default {
     get,
     post,
+    put,
     del
 };

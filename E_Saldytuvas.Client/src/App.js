@@ -81,15 +81,23 @@ class App extends Component {
                         )
                     }
                         </Nav>
-                        <Nav pullRight>
-                            <NavItem><Button>Button1</Button></NavItem>
-                            <NavItem><Button>Button2</Button></NavItem>
-                            <NavItem><Button>Button3</Button></NavItem>
-                            <NavItem><Button>Button4</Button></NavItem>
-                        </Nav>
+                        {
+                            isAuthenticated() && (
+                                <Nav pullRight>
+                                    <NavItem><Button>Profilis</Button></NavItem>
+                                    <NavItem><Button>Button2</Button></NavItem>
+                                    <NavItem><Button>Button3</Button></NavItem>
+                                    <NavItem><Button>Button4</Button></NavItem>
+                                </Nav>
+                            )
+                        }
                     </Navbar.Collapse>
                 </Navbar>
-                <h1 style={namePosition}>e-Šaldytuvas</h1>
+                {
+                    !isAuthenticated() && (
+                        <h1 style={namePosition}>e-Šaldytuvas</h1>
+                    )
+                }
             </div>
         );
     }
