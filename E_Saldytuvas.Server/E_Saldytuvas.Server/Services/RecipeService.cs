@@ -26,6 +26,23 @@ namespace E_Saldytuvas.Server.Services
             return recipes;
         }
 
+        public IEnumerable<Recipe> GetUserRecipes(long userId)
+        {
+            /*var user = _dbContext.Users
+                .Include(u => u.Recipes)
+                .SingleOrDefault(u => u.Id == userId);
+
+            if(user == null)
+                throw new Exception("User not found");*/
+
+            var recipes = _dbContext.Recipes
+                .Include(r => r.Ingredients)
+                .Where(r => r.User.Id == userId)
+                .ToList();
+
+            return recipes;
+        }
+
         public Recipe GetRecipe(int recipeId)
         {
             var recipe = _dbContext.Recipes
@@ -41,6 +58,7 @@ namespace E_Saldytuvas.Server.Services
             {
                 return false;
             }
+
 
             _dbContext.Recipes
                 .Add(recipe);

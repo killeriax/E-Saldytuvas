@@ -16,6 +16,9 @@ namespace E_Saldytuvas.Server.Models
         [MaxLength(30)]
         public string Surname { get; set; }
 
+        [MaxLength(50)]
+        public string Email { get; set; }
+
         public List<Ingredient> Ingredients { get; set; }
 
         public List<Recipe> Recipes { get; set; }

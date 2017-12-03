@@ -14,5 +14,6 @@ namespace E_Saldytuvas.Server.Services
         bool DeleteUser(int userId);
         User RegisterUser(string authId);
         string GetUserAuthId(ClaimsPrincipal claimsPrincipal);
+        long GetUserId(string authId);
     }
 }

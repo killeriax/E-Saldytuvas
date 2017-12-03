@@ -168,5 +168,13 @@ namespace E_Saldytuvas.Server.Services
 
             return authId;
         }
+
+        public long GetUserId(string authId)
+        {
+            User user = _dbContext.Users.FirstOrDefault(u => u.AuthId == authId);
+            if (user == null)
+                return -1;
+            return user.Id;
+        }
     }
 }

@@ -16,5 +16,8 @@ namespace E_Saldytuvas.Server.Models
         [Required]
         [MaxLength(1000)]
         public string Description { get; set; }
+
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

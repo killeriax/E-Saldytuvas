@@ -84,10 +84,22 @@ class App extends Component {
                         {
                             isAuthenticated() && (
                                 <Nav pullRight>
-                                    <NavItem><Button>Profilis</Button></NavItem>
-                                    <NavItem><Button>Button2</Button></NavItem>
-                                    <NavItem><Button>Button3</Button></NavItem>
-                                    <NavItem><Button>Button4</Button></NavItem>
+                                    <NavItem><Button
+                                        onClick={this.goTo.bind(this, 'useredit')}
+                                    >
+                                        Profilis</Button></NavItem>
+                                    <NavItem><Button
+                                        onClick={this.goTo.bind(this, 'products')}
+                                    >
+                                        Produktai</Button></NavItem>
+                                    <NavItem><Button
+                                        onClick={this.goTo.bind(this, 'recipes')}
+                                    >
+                                        Receptai</Button></NavItem>
+                                    <NavItem><Button
+                                        onClick={this.goTo.bind(this, 'userrecipes')}
+                                    >
+                                        Mano receptai</Button></NavItem>
                                 </Nav>
                             )
                         }

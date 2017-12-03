@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
@@ -10,22 +11,11 @@ namespace E_Saldytuvas.Server.Controllers
     [Route("api/[controller]")]
     public class RecipesController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
-
         private readonly IRecipeService _recipeService;
 
-        public RecipesController(ApplicationDbContext dbContext, IRecipeService recipeService)
+        public RecipesController(IRecipeService recipeService)
         {
-            _dbContext = dbContext;
             _recipeService = recipeService;
-
-            if (_dbContext.Recipes.Count() == 0)
-            {
-                _dbContext.Recipes
-                    .Add(new Recipe { Title = "Sumuštinis", Description = "Paimame vieną riekę, užtepame sviestu, uždedame dešros, pomidorų ir patiekiame." });
-
-                _dbContext.SaveChanges();
-            }
         }
 
         // GET api/recipes
@@ -33,6 +23,19 @@ namespace E_Saldytuvas.Server.Controllers
         public IEnumerable<Recipe> GetRecipes()
         {
             return _recipeService.GetRecipes();
+        }
+
+        [HttpGet("user/{userId}")]
+        public IEnumerable<Recipe> GetUserRecipes(long userId)
+        {
+            try
+            {
+                return _recipeService.GetUserRecipes(userId);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
 
         // GET api/recipes/5

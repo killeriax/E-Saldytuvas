@@ -5,7 +5,8 @@ import Home from './home/Home';
 import auth from './auth/Auth';
 import history from './history';
 import Authenticate from "./auth/Authenticate";
-
+import UserEdit from "./user/UserEdit";
+import UserRecipes from "./recipes/UserRecipes";
 
 export const makeMainRoutes = () => {
     return (
@@ -14,6 +15,8 @@ export const makeMainRoutes = () => {
                 <Route path="/" render={(props) => <App auth={auth} {...props} />} />
                 <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
                 <Route path="/authenticate" component={Authenticate}/>
+                <Route path="/useredit" render={(props) => <UserEdit auth={auth} {...props} />} />
+                <Route path="/userrecipes" render={(props) => <UserRecipes auth={auth} {...props} />} />
             </div>
         </Router>
     );

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
 using E_Saldytuvas.Server.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -11,35 +9,12 @@ namespace E_Saldytuvas.Server.Controllers
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
-
         private readonly IUserService _userService;
 
-        public UsersController(ApplicationDbContext dbContext, IUserService userService)
+        public UsersController(IUserService userService)
         {
-            _dbContext = dbContext;
             _userService = userService;
-
-            if(_dbContext.Users.Count() == 0)
-            {
-                _dbContext.Users
-                    .Add(new User { Name = "Vardenis", Surname = "Pavardenis" });
-
-                _dbContext.SaveChanges();
-            }
         }
-
-        /*[Authorize]
-        [HttpGet("claims")]
-        public object Claims()
-        {
-            return User.Claims
-                .Select(c => new
-                {
-                    Type = c.Type,
-                    Value = c.Value
-                });
-        }*/
 
         [Authorize]
         [HttpPost("register")]
@@ -133,6 +108,13 @@ namespace E_Saldytuvas.Server.Controllers
             }
 
             return new NoContentResult();
+        }
+
+        [HttpGet("userId")]
+        public long GetUserId()
+        {
+            var authId = _userService.GetUserAuthId(User);
+            return _userService.GetUserId(authId);
         }
     }
 }

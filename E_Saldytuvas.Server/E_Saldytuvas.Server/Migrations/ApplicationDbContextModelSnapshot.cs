@@ -49,7 +49,9 @@ namespace E_Saldytuvas.Server.Migrations
 
                     b.Property<int?>("MeasureId");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<int?>("RecipeId");
 
@@ -71,7 +73,9 @@ namespace E_Saldytuvas.Server.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.HasKey("Id");
 
@@ -83,11 +87,15 @@ namespace E_Saldytuvas.Server.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000);
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
-                    b.Property<int?>("UserId");
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -101,11 +109,17 @@ namespace E_Saldytuvas.Server.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthId");
+                    b.Property<string>("AuthId")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Email")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("Surname");
+                    b.Property<string>("Name")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("Surname")
+                        .HasMaxLength(30);
 
                     b.HasKey("Id");
 
@@ -140,9 +154,10 @@ namespace E_Saldytuvas.Server.Migrations
 
             modelBuilder.Entity("E_Saldytuvas.Server.Models.Recipe", b =>
                 {
-                    b.HasOne("E_Saldytuvas.Server.Models.User")
+                    b.HasOne("E_Saldytuvas.Server.Models.User", "User")
                         .WithMany("Recipes")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
