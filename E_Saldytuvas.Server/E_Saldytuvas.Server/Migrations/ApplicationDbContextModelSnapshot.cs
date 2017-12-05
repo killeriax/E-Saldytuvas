@@ -91,6 +91,8 @@ namespace E_Saldytuvas.Server.Migrations
                         .IsRequired()
                         .HasMaxLength(1000);
 
+                    b.Property<string>("ImageUrl");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(60);

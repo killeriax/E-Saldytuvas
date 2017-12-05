@@ -20,6 +20,7 @@ namespace E_Saldytuvas.Server.Services
         public IEnumerable<Recipe> GetRecipes()
         {
             var recipes = _dbContext.Recipes
+                .Include(r => r.User)
                 .Include(r => r.Ingredients)
                 .ToList();
 

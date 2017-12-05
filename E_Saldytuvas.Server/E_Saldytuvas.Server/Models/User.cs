@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace E_Saldytuvas.Server.Models
 {
@@ -20,7 +21,7 @@ namespace E_Saldytuvas.Server.Models
         public string Email { get; set; }
 
         public List<Ingredient> Ingredients { get; set; }
-
+        [JsonIgnore]
         public List<Recipe> Recipes { get; set; }
 
         public List<CookedMeal> CookedMeals { get; set; }

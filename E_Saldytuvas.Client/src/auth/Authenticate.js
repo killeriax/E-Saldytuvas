@@ -14,7 +14,7 @@ class Authenticate extends React.Component {
         const isAuthenticated = await auth.handleAuthentication();
 
         if (isAuthenticated) {
-            await registerUser()();
+            await registerUser();
         }
 
         this.setState({isAuthenticated});

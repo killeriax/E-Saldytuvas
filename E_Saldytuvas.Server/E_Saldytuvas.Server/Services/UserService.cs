@@ -41,7 +41,7 @@ namespace E_Saldytuvas.Server.Services
             var users = _dbContext.Users
                 .Include(u => u.CookedMeals)
                 .Include(u => u.Ingredients)
-                .Include(u => u.Recipes)
+                //.Include(u => u.Recipes)
                 .ToList();
 
             return users;
@@ -52,7 +52,7 @@ namespace E_Saldytuvas.Server.Services
             var user = _dbContext.Users
                 .Include(u => u.CookedMeals)
                 .Include(u => u.Ingredients)
-                .Include(u => u.Recipes)
+                //.Include(u => u.Recipes)
                 .FirstOrDefault(u => u.Id == userId);
 
             return user;
@@ -111,18 +111,21 @@ namespace E_Saldytuvas.Server.Services
                 .Include(u => u.Recipes)
                 .FirstOrDefault(u => u.Id == userId);
 
-            if (usr == null || user.AuthId != userAuthId)
-            {
-                return -1;
-            }
 
             if (user == null)
             {
                 return -2;
             }
 
+            if (usr == null || user.AuthId != userAuthId)
+            {
+                return -1;
+            }
+
+            
             user.Name = usr.Name;
             user.Surname = usr.Surname;
+            user.Email = usr.Email;
 
             _dbContext.Users
                 .Update(user);

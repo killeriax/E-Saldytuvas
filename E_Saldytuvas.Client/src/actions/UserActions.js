@@ -10,9 +10,12 @@ import auth from '../auth/Auth';
 export const getCurrentUser = async () => {
     try {
         const userId = await getUserId();
+        console.log(userId);
 
         const response = await api.get(USER_URL.replace(':userId',userId), {authorized: true});
+
         const json = await response.json();
+        console.log(json);
 
         if (!response.ok) {
             throw new Error(json);
@@ -23,7 +26,7 @@ export const getCurrentUser = async () => {
     }
 };
 
-export const registerUser = () => async () => {
+export const registerUser = async () => {
     try {
         const response = await api.post(REGISTER_USER_URL, {authorized: true});
         const json = await response.json();
@@ -37,9 +40,9 @@ export const registerUser = () => async () => {
     }
 };
 
-export const editUser = async (userId, name, surname) => {
+export const editUser = async (userId, name, surname, email) => {
     try {
-        await api.put(USER_URL.replace(':userId', userId), {body: {name, surname}, authorized: true});
+        await api.put(USER_URL.replace(':userId', userId), {body: {name, surname, email}, authorized: true});
     } catch (err) {
         console.error('Could not edit a user', err);
     }
@@ -58,19 +61,17 @@ export const getUserId = async () => {
     }
 };
 
-export const getUserRecipes = async () => {
+export const fetchUserId = () => {
     try {
-        const userId = await getUserId();
-
-        const response = await api.get(USER_URL.replace(':userId',userId), {authorized: true});
-        const json = await response.json();
-
+        const response = api.get(USER_ID_URL, {authorized: true});
+        const json = response.json();
+        console.log(json);
         if (!response.ok) {
             throw new Error(json);
         }
         return json;
     } catch (err) {
-        console.error('Could not fetch a user.', err);
+        console.error('Could not register a user', err);
     }
 };
 

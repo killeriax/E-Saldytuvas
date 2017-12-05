@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import UserRecipesList from "./UserRecipesList";
+import RecipesList from "./RecipesList";
 import {Button} from "react-bootstrap";
 
-class UserRecipes extends Component {
+class Recipes extends Component {
 
     goTo(route) {
         this.props.history.replace(`/${route}`)
@@ -15,7 +15,7 @@ class UserRecipes extends Component {
                 {
                     isAuthenticated() && (
                         <h1>
-                            Mano receptai
+                            Receptai
                         </h1>
                     )
                 }
@@ -33,7 +33,7 @@ class UserRecipes extends Component {
                 }
                 {
                     isAuthenticated() && (
-                        <UserRecipesList/>
+                        <RecipesList/>
                     )
                 }
             </div>
@@ -41,4 +41,4 @@ class UserRecipes extends Component {
     }
 }
 
-export default UserRecipes;
+export default Recipes;

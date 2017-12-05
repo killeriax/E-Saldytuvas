@@ -7,6 +7,8 @@ import history from './history';
 import Authenticate from "./auth/Authenticate";
 import UserEdit from "./user/UserEdit";
 import UserRecipes from "./recipes/UserRecipes";
+import NewRecipe from "./recipes/NewRecipe";
+import Recipes from "./recipes/Recipes";
 
 export const makeMainRoutes = () => {
     return (
@@ -16,7 +18,9 @@ export const makeMainRoutes = () => {
                 <Route path="/home" render={(props) => <Home auth={auth} {...props} />} />
                 <Route path="/authenticate" component={Authenticate}/>
                 <Route path="/useredit" render={(props) => <UserEdit auth={auth} {...props} />} />
+                <Route path="/recipes" render={(props) => <Recipes auth={auth} {...props} />} />
                 <Route path="/userrecipes" render={(props) => <UserRecipes auth={auth} {...props} />} />
+                <Route path="/newrecipe" render={(props) => <NewRecipe auth={auth} {...props} />} />
             </div>
         </Router>
     );

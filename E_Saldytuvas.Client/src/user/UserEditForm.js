@@ -4,23 +4,25 @@ import {editUser, getUserId, getCurrentUser} from "../actions/UserActions";
 
 class UserEditForm extends Component {
     state = {
-        firstName: '',
-        lastName: '',
-        email: ''
+        firstName: undefined,
+        lastName: undefined,
+        email: undefined
     };
 
     async componentDidMount() {
+        debugger
         const data = await getCurrentUser();
 
         this.setState({
             firstName: data.name,
-            lastName: data.surname
+            lastName: data.surname,
+            email: data.email
         })
     }
 
     handleSubmit = async () => {
         const userId = await getUserId();
-        editUser(userId, this.state.firstName, this.state.lastName);
+        editUser(userId, this.state.firstName, this.state.lastName, this.state.email);
     };
 
     handleFirstNameChange = e => {
@@ -35,25 +37,37 @@ class UserEditForm extends Component {
         });
     };
 
+    handleEmailChange = e => {
+        this.setState({
+            email: e.target.value
+        });
+    };
+
     render() {
         return (
             <div className="container">
-                <h1>Hello</h1>
                 <Form>
                     <FormGroup controlId="firstName">
                         <ControlLabel>
                             Vardas
                         </ControlLabel>
-                        <FormControl type="text" placeholder="Vardas" value={this.state.firstName} onChange={this.handleFirstNameChange} />
+                        <FormControl type="text" placeholder="Vardas" value={this.state.firstName || ''} onChange={this.handleFirstNameChange} />
                     </FormGroup>
 
                     <FormGroup controlId="lastName">
                         <ControlLabel>
                             Pavardė
                         </ControlLabel>
-                        <FormControl type="text" placeholder="Pavardė" value={this.state.lastName} onChange={this.handleLastNameChange}/>
+                        <FormControl type="text" placeholder="Pavardė" value={this.state.lastName || ''} onChange={this.handleLastNameChange}/>
                     </FormGroup>
-                    <Button bsStyle="primary" onClick={this.handleSubmit}>
+
+                    <FormGroup controlId="email">
+                        <ControlLabel>
+                            Elektroninis paštas
+                        </ControlLabel>
+                        <FormControl type="email" placeholder="Elektroninis paštas" value={this.state.email || ''} onChange={this.handleEmailChange}/>
+                    </FormGroup>
+                    <Button bsStyle="success" type="submit" onClick={this.handleSubmit}>
                         Išsaugoti
                     </Button>
                 </Form>

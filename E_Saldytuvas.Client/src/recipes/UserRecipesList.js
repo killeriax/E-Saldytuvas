@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import {getRecipes} from "../actions/RecipeActions";
-import {Col, ProgressBar, Well} from "react-bootstrap";
+import {getUserRecipes} from "../actions/RecipeActions";
+import {Col, Glyphicon, ProgressBar, Well} from "react-bootstrap";
+import {getUserId} from "../actions/UserActions";
 
-class RecipesList extends Component {
+class UserRecipesList extends Component {
 
     state = {
         userRecipes: null
     }
 
     async componentWillMount() {
-        const recipes = await getRecipes();
+        const userId = await getUserId();
+        const recipes = await getUserRecipes(userId);
         debugger
         this.setState({
             userRecipes: recipes
@@ -35,15 +37,15 @@ class RecipesList extends Component {
                         <Well>
                             {this.paintImage(recipe)}
                             <h2> {recipe.title} </h2>
-                            <p>Recepto autorius: {recipe.user.name} {recipe.user.surname}</p>
-                            <a className="btn btn-success" onClick=""> Detaliau </a>
+                            <p><a className="btn btn-success" onClick=""><Glyphicon glyph="edit"/> Redaguoti </a>
+                                <a className="btn btn-danger" onClick=""><Glyphicon glyph="remove"/></a></p>
                         </Well>
                     </Col>
                 </div>
-            }
+        }
 
         );
     }
 }
 
-export default RecipesList;
+export default UserRecipesList;
