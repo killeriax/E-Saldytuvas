@@ -42,7 +42,7 @@ class App extends Component {
         }
 
         return (
-            <div style={ divStyle }>
+            <div style={divStyle}>
                 <Navbar inverse collapseOnSelect>
                     <Navbar.Header>
                         <Navbar.Brand>

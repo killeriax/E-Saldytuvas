@@ -33,7 +33,7 @@ class UserRecipes extends Component {
                 }
                 {
                     isAuthenticated() && (
-                        <UserRecipesList/>
+                        <UserRecipesList {...this.props}/>
                     )
                 }
             </div>

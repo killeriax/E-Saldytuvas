@@ -1,21 +1,46 @@
 import React, { Component } from 'react';
 import {getUserRecipes} from "../actions/RecipeActions";
-import {Col, Glyphicon, ProgressBar, Well} from "react-bootstrap";
+import {Button, Col, FormControl, Glyphicon, Modal, ProgressBar, Well} from "react-bootstrap";
 import {getUserId} from "../actions/UserActions";
+import NewRecipeForm from "./NewRecipeForm";
 
 class UserRecipesList extends Component {
 
     state = {
-        userRecipes: null
-    }
+        userRecipes: null,
+        showModal: []
+    };
+
+    open = index => {
+        this.setState({showModal:{
+                [index] : true
+            }});
+    };
+
+    close = index => {
+        this.setState({showModal: {
+                [index] : false
+            }});
+    };
 
     async componentWillMount() {
         const userId = await getUserId();
         const recipes = await getUserRecipes(userId);
-        debugger
         this.setState({
-            userRecipes: recipes
+            userRecipes: recipes,
+            showModal: recipes.map(() => false)
         });
+    }
+
+    deleteRecipe(recipeId) {
+        let approve = window.confirm("Paspaudus OK, receptas bus ištrintas!");
+
+        if (approve === true) {
+            alert("Receptas pašalintas sėkmingai.");
+            this.setState({
+                userRecipes: this.state.userRecipes.filter(userRecipe => userRecipe.id !== recipeId)
+            });
+        }
     }
 
     paintImage(recipe) {
@@ -24,6 +49,7 @@ class UserRecipesList extends Component {
         }
         return <img alt="Patiekalo nuotrauka" height="100%" width="100%" src={`https://static.pexels.com/photos/376464/pexels-photo-376464.jpeg`} />;
     }
+
 
     render() {
         let recipes = this.state.userRecipes;
@@ -37,10 +63,21 @@ class UserRecipesList extends Component {
                         <Well>
                             {this.paintImage(recipe)}
                             <h2> {recipe.title} </h2>
-                            <p><a className="btn btn-success" onClick=""><Glyphicon glyph="edit"/> Redaguoti </a>
-                                <a className="btn btn-danger" onClick=""><Glyphicon glyph="remove"/></a></p>
+                            <p><a className="btn btn-success" onClick={() => this.open(index)}><Glyphicon glyph="edit"/> Redaguoti </a>
+                                <a className="btn btn-danger" onClick={() => this.deleteRecipe(recipe.id)}><Glyphicon glyph="remove"/></a></p>
                         </Well>
+
                     </Col>
+                    <Modal show={this.state.showModal[index]} onHide={() => this.close(index)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title> Redaguoti receptą </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+
+                            <NewRecipeForm title={recipe.title} description={recipe.description} {...this.props}/>
+
+                        </Modal.Body>
+                    </Modal>
                 </div>
         }
 

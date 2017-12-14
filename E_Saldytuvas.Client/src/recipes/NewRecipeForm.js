@@ -6,15 +6,18 @@ import firebase from 'firebase';
 
 class NewRecipeForm extends Component {
     state = {
-        title: undefined,
-        description: undefined,
+        title: this.props.title || null,
+        description: this.props.description || null,
         imageUrl: undefined,
         file: undefined
     };
 
+    goTo(route) {
+        this.props.history.replace(`/${route}`)
+    }
+
     componentWillMount()
     {
-        debugger
         if(firebase.apps.length === 0) {
             firebase.initializeApp({
                 apiKey: "AIzaSyBeS-FyyeO0gXuiMyXkiqAMCObvTvOL9vo",
@@ -25,7 +28,6 @@ class NewRecipeForm extends Component {
                 messagingSenderId: "835499054604"
             });
         }
-        debugger
     }
 
     handleTitleChange = e => {
@@ -46,35 +48,8 @@ class NewRecipeForm extends Component {
         })
     };
 
-    /*handleSubmitt = () => {
-        debugger
-        const storageRef = firebase.storage().ref();
-        const uuid =  ((((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-4" + (((1+Math.random())*0x10000)|0).toString(16).substring(1).substr(0,3) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1)).toLowerCase();
-        const that = this;
-        const lll =  this.state.file.length;
-
-        for(let i = 0; i < lll; i++)
-        {
-            debugger
-            const uploadTask = storageRef.child(uuid).put(that.state.file[i]).then((snapshot) => {
-                const url = snapshot.downloadURL;
-                debugger
-                console.log('Uploaded a blob or file!');
-                debugger
-                this.setState({
-                    imageUrl: url
-                })
-            }).catch((e)=>{
-                debugger
-                console.log(e);
-            });
-
-        }
-    }*/
-
     handleSubmit = () => {
         const userId = fetchUserId();
-        debugger
         if(firebase.apps.length === 0) {
             firebase.initializeApp({
                 apiKey: "AIzaSyBeS-FyyeO0gXuiMyXkiqAMCObvTvOL9vo",
@@ -85,51 +60,25 @@ class NewRecipeForm extends Component {
                 messagingSenderId: "835499054604"
             });
         }
-        debugger
-        var storageRef = firebase.storage().ref();
-        console.log(firebase.apps.length);
-        debugger
-        var that = this;
-        debugger
-        var uuid =  ((((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-4" + (((1+Math.random())*0x10000)|0).toString(16).substring(1).substr(0,3) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1)).toLowerCase();
-        for(var i = 0; i < that.state.file.length; i++)
+        const storageRef = firebase.storage().ref();
+        const that = this;
+        const uuid =  ((((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-4" + (((1+Math.random())*0x10000)|0).toString(16).substring(1).substr(0,3) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1)).toLowerCase();
+        for(let i = 0; i < that.state.file.length; i++)
         {
-            var uploadTask = storageRef.child(uuid).put(that.state.file[i]).then(function(snapshot) {
-                var url = snapshot.downloadURL;
-                debugger
+            const uploadTask = storageRef.child(uuid).put(that.state.file[i]).then(function(snapshot) {
+                const url = snapshot.downloadURL;
                 console.log('Uploaded a blob or file!');
-                debugger
                 that.setState({
                     imageUrl: url
-                })
-                //const userId = fetchUserId();
+                });
                 addNewRecipe(that.state.title, that.state.description, that.state.imageUrl, 1);
             });
-            /*uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-                function(snapshot) {
-                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Upload is ' + progress + '% done');
-                    switch (snapshot.state) {
-                        case firebase.storage.TaskState.PAUSED: // or 'paused'
-                            console.log('Upload is paused');
-                            break;
-                        case firebase.storage.TaskState.RUNNING: // or 'running'
-                            console.log('Upload is running');
-                            break;
-                    }});
-            uploadTask.pause();
-            uploadTask.resume();*/
         }
-        /*debugger
-        const userId = fetchUserId();
-        debugger
-        addRecipe(this.state.title, this.state.description, this.state.imageUrl, userId);*/
+        this.goTo.bind(this, 'userrecipes');
     };
 
     render() {
         return (
-            <div className="container">
                 <Form>
                     <FormGroup controlId="title">
                         <ControlLabel>
@@ -155,7 +104,6 @@ class NewRecipeForm extends Component {
                         Sukurti
                     </Button>
                 </Form>
-            </div>
         );
     }
 }

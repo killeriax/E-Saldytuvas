@@ -11,7 +11,7 @@ class NewRecipe extends Component {
                 </h1>
                 {
                     isAuthenticated() && (
-                        <NewRecipeForm/>
+                        <NewRecipeForm {...this.props}/>
                     )
                 }
             </div>

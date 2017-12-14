@@ -1,32 +1,22 @@
 import React, { Component } from 'react';
 
 class Home extends Component {
-    /*login() {
-        this.props.auth.login();
-    }*/
     render() {
         const { isAuthenticated } = this.props.auth;
+
+        var namePosition = {
+            marginTop: "15%",
+            marginLeft: "35%"
+        }
+
         return (
             <div className="container">
                 {
                     isAuthenticated() && (
-                        <h4>
+                        <h1 style={namePosition}>
                             Sveiki prisijungę!
-                        </h4>
+                        </h1>
                     )
-                }
-                {
-                    /*!isAuthenticated() && (
-                        <h4>
-                          Jūs neprisijungę! Norėdami tęsti, {' '}
-                          <a
-                            style={{ cursor: 'pointer' }}
-                            onClick={this.login.bind(this)}
-                          >
-                            prisijunkite.
-                          </a>
-                        </h4>
-                      )*/
                 }
             </div>
         );

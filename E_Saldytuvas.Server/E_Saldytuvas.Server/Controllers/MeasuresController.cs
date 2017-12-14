@@ -19,7 +19,7 @@ namespace E_Saldytuvas.Server.Controllers
             _dbContext = dbContext;
             _measureService = measureService;
 
-            if (_dbContext.Measures.Count() == 0)
+            if (!_dbContext.Measures.Any())
             {
                 _dbContext.Measures
                     .Add(new Measure { Name = "Kg" });
