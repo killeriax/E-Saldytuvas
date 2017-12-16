@@ -19,7 +19,7 @@ namespace E_Saldytuvas.Server.Controllers
             _dbContext = dbContext;
             _cookedMealService = cookedMealService;
 
-            if (_dbContext.CookedMeals.Count() == 0)
+            if (!_dbContext.CookedMeals.Any())
             {
                 _dbContext.CookedMeals
                     .Add(new CookedMeal { Size = 0.5 });

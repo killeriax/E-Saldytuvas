@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Button, Nav, NavItem } from 'react-bootstrap';
 import './App.css';
-import Background from './images/index.jpeg';
 import Icon from './images/refrigerator.svg';
 import windowSize from 'react-window-size';
 

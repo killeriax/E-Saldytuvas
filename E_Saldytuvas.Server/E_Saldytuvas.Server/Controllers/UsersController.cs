@@ -28,7 +28,7 @@ namespace E_Saldytuvas.Server.Controllers
             var user = _userService.RegisterUser(authId);
 
             if (user == null)
-                return BadRequest();
+                return BadRequest("User is already registered");
 
             return Created($"api/users/${user.Id}", user.Id);
         }
@@ -62,10 +62,7 @@ namespace E_Saldytuvas.Server.Controllers
             {
                 return CreatedAtRoute("GetUser", new { userId = user.Id }, user);
             }
-            else
-            {
                 return BadRequest();
-            }
         }
 
         // PUT api/users/5
@@ -78,15 +75,11 @@ namespace E_Saldytuvas.Server.Controllers
             if (authId == null)
                 return BadRequest("Invalid token provided");
 
-            //var user = _userService.RegisterUser(authId);
-
-            //var result = _userService.UpdateUser(userId, usr);
             var result = _userService.UpdateUser(userId, authId, usr);
 
             if (result == -1)
             {
                 return Forbid();
-                //return BadRequest();
             }
 
             if (result == -2)

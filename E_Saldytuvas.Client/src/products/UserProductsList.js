@@ -82,7 +82,7 @@ class UserProductsList extends Component {
                                     <option value="other">...</option>
                                 </FormControl>
                                 {' '}
-                                <Button bsStyle="success" onClick={''}>
+                                <Button bsStyle="success" onClick={() => {}}>
                                     Išsaugoti
                                 </Button>
                             </Form>
