@@ -21,28 +21,17 @@ class App extends Component {
     render() {
         const { isAuthenticated } = this.props.auth;
 
-        var divStyle = {};
-
-        if(!isAuthenticated()) {
-            divStyle = {
-                width: this.props.windowWidth,
-                height: this.props.windowHeight,
-                backgroundImage: "url(" + Background + ")",
-                backgroundSize: "cover"
-            };
-        }
-
-        var namePosition = {
-            marginTop: "15%",
+        const namePosition = {
+            marginTop: "25%",
             marginLeft: "30%"
-        }
+        };
 
-        var titleStyle = {
+        const titleStyle = {
             fontFamily: "'Press Start 2P', cursive"
-        }
+        };
 
         return (
-            <div style={divStyle}>
+            <div>
                 <Navbar inverse collapseOnSelect>
                     <Navbar.Header>
                         <Navbar.Brand>
@@ -133,7 +122,9 @@ class App extends Component {
                 </Navbar>
                 {
                     !isAuthenticated() && (
-                        <h1 style={namePosition}>e-Šaldytuvas</h1>
+                        <div className="container">
+                            <h1 style={namePosition}>e-Šaldytuvas</h1>
+                        </div>
                     )
                 }
             </div>

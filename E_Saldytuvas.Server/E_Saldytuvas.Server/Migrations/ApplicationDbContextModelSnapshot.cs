@@ -55,7 +55,7 @@ namespace E_Saldytuvas.Server.Migrations
 
                     b.Property<int?>("RecipeId");
 
-                    b.Property<int?>("UserId");
+                    b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
@@ -149,9 +149,10 @@ namespace E_Saldytuvas.Server.Migrations
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId");
 
-                    b.HasOne("E_Saldytuvas.Server.Models.User")
+                    b.HasOne("E_Saldytuvas.Server.Models.User", "User")
                         .WithMany("Ingredients")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("E_Saldytuvas.Server.Models.Recipe", b =>

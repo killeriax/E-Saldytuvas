@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Form, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
-import {getUserId, fetchUserId} from "../actions/UserActions";
-import {addRecipe, addNewRecipe} from "../actions/RecipeActions";
+import {getUserId} from "../actions/UserActions";
+import {addNewRecipe} from "../actions/RecipeActions";
 import firebase from 'firebase';
 
 class NewRecipeForm extends Component {
@@ -9,15 +9,21 @@ class NewRecipeForm extends Component {
         title: this.props.title || null,
         description: this.props.description || null,
         imageUrl: undefined,
-        file: undefined
+        file: [],
+        userId: undefined,
+        edit: this.props.edit || false
     };
 
     goTo(route) {
         this.props.history.replace(`/${route}`)
     }
 
-    componentWillMount()
+    async componentWillMount()
     {
+        const usrId = await getUserId();
+        this.setState({
+            userId: usrId
+        });
         if(firebase.apps.length === 0) {
             firebase.initializeApp({
                 apiKey: "AIzaSyBeS-FyyeO0gXuiMyXkiqAMCObvTvOL9vo",
@@ -48,62 +54,74 @@ class NewRecipeForm extends Component {
         })
     };
 
+    buttonName = () => {
+        if(this.state.edit === true)
+            return "Pakeisti";
+        else
+            return "Sukurti";
+    };
+
     handleSubmit = () => {
-        const userId = fetchUserId();
-        if(firebase.apps.length === 0) {
-            firebase.initializeApp({
-                apiKey: "AIzaSyBeS-FyyeO0gXuiMyXkiqAMCObvTvOL9vo",
-                authDomain: "e-saldytuvas.firebaseapp.com",
-                databaseURL: "https://e-saldytuvas.firebaseio.com",
-                projectId: "e-saldytuvas",
-                storageBucket: "e-saldytuvas.appspot.com",
-                messagingSenderId: "835499054604"
-            });
-        }
         const storageRef = firebase.storage().ref();
-        const that = this;
+        //const that = this;
         const uuid =  ((((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-4" + (((1+Math.random())*0x10000)|0).toString(16).substring(1).substr(0,3) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + "-" + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1) + (((1+Math.random())*0x10000)|0).toString(16).substring(1)).toLowerCase();
-        for(let i = 0; i < that.state.file.length; i++)
+        debugger
+        if(this.state.edit === false)
         {
-            const uploadTask = storageRef.child(uuid).put(that.state.file[i]).then(function(snapshot) {
-                const url = snapshot.downloadURL;
-                console.log('Uploaded a blob or file!');
-                that.setState({
-                    imageUrl: url
-                });
-                addNewRecipe(that.state.title, that.state.description, that.state.imageUrl, 1);
-            });
+            if(this.state.file.length > 0)
+            {
+                for(let i = 0; i < this.state.file.length; i++)
+                {
+                    storageRef.child(uuid).put(this.state.file[i]).then((snapshot) => {
+                        const url = snapshot.downloadURL;
+                        this.setState({
+                            imageUrl: url
+                        });
+                        debugger
+                        addNewRecipe(this.state.title, this.state.description, this.state.imageUrl, this.state.userId);
+                        this.forceUpdate();
+                        this.goTo('userrecipes');
+                    });
+                }
+            }
+            /*else
+                addNewRecipe(that.state.title, that.state.description, that.state.imageUrl, that.state.userId);*/
         }
-        this.goTo.bind(this, 'userrecipes');
+        else
+        {
+            // updateRecipe(that.state.title, that.state.description, that.state.imageUrl, that.state.userId);
+        }
+        debugger
+
     };
 
     render() {
         return (
-                <Form>
-                    <FormGroup controlId="title">
-                        <ControlLabel>
-                            Patiekalo pavadinimas
-                        </ControlLabel>
-                        <FormControl type="text" placeholder="Patiekalo pavadinimas" value={this.state.title || ''} onChange={this.handleTitleChange} />
-                    </FormGroup>
+            <Form>
+                <FormGroup controlId="title">
+                    <ControlLabel>
+                        Patiekalo pavadinimas
+                    </ControlLabel>
+                    <FormControl type="text" placeholder="Patiekalo pavadinimas" value={this.state.title || ''} onChange={this.handleTitleChange} />
+                </FormGroup>
 
-                    <FormGroup controlId="description">
-                        <ControlLabel>
-                            Aprašymas
-                        </ControlLabel>
-                        <FormControl componentClass="textarea" placeholder="Aprašymas" value={this.state.description || ''} onChange={this.handleDescriptionChange}/>
-                    </FormGroup>
+                <FormGroup controlId="description">
+                    <ControlLabel>
+                        Aprašymas
+                    </ControlLabel>
+                    <FormControl componentClass="textarea" placeholder="Aprašymas" value={this.state.description || ''} onChange={this.handleDescriptionChange}/>
+                </FormGroup>
 
-                    <FormGroup controlId="imageUrl">
-                        <ControlLabel>
-                            Patiekalo nuotrauka
-                        </ControlLabel>
-                        <FormControl type="file" placeholder="Patiekalo nuotrauka" onChange={this.handleFile}/>
-                    </FormGroup>
-                    <Button bsStyle="success" onClick={this.handleSubmit}>
-                        Sukurti
-                    </Button>
-                </Form>
+                <FormGroup controlId="imageUrl">
+                    <ControlLabel>
+                        Patiekalo nuotrauka
+                    </ControlLabel>
+                    <FormControl type="file" placeholder="Patiekalo nuotrauka" onChange={this.handleFile}/>
+                </FormGroup>
+                <Button bsStyle="success" onClick={this.handleSubmit}>
+                    {this.buttonName()}
+                </Button>
+            </Form>
         );
     }
 }

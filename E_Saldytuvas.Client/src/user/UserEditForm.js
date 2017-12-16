@@ -10,7 +10,6 @@ class UserEditForm extends Component {
     };
 
     async componentDidMount() {
-        debugger
         const data = await getCurrentUser();
 
         this.setState({
@@ -67,7 +66,7 @@ class UserEditForm extends Component {
                         </ControlLabel>
                         <FormControl type="email" placeholder="Elektroninis paštas" value={this.state.email || ''} onChange={this.handleEmailChange}/>
                     </FormGroup>
-                    <Button bsStyle="success" type="submit" onClick={this.handleSubmit}>
+                    <Button bsStyle="success" onClick={this.handleSubmit}>
                         Išsaugoti
                     </Button>
                 </Form>

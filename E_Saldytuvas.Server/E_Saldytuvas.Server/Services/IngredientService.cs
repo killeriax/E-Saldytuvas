@@ -1,10 +1,8 @@
 ﻿using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace E_Saldytuvas.Server.Services
 {
@@ -92,6 +90,16 @@ namespace E_Saldytuvas.Server.Services
             _dbContext.SaveChanges();
 
             return true;
+        }
+
+        public IEnumerable<Ingredient> GetUserIngredients(long userId)
+        {
+            var ingredients = _dbContext.Ingredients
+                .Include(i => i.Measure)
+                .Where(i => i.User.Id == userId)
+                .ToList();
+
+            return ingredients;
         }
     }
 }

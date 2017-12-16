@@ -10,5 +10,6 @@ namespace E_Saldytuvas.Server.Services
         bool AddIngredient(Ingredient ingredient);
         int UpdateIngredient(long ingredientId, Ingredient ingr);
         bool DeleteIngredient(int ingredientId);
+        IEnumerable<Ingredient> GetUserIngredients(long userId);
     }
 }

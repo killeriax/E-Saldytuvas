@@ -9,6 +9,7 @@ import UserEdit from "./user/UserEdit";
 import UserRecipes from "./recipes/UserRecipes";
 import NewRecipe from "./recipes/NewRecipe";
 import Recipes from "./recipes/Recipes";
+import UserProducts from "./products/UserProducts";
 
 export const makeMainRoutes = () => {
     return (
@@ -21,6 +22,7 @@ export const makeMainRoutes = () => {
                 <Route path="/recipes" render={(props) => <Recipes auth={auth} {...props} />} />
                 <Route path="/userrecipes" render={(props) => <UserRecipes auth={auth} {...props} />} />
                 <Route path="/newrecipe" render={(props) => <NewRecipe auth={auth} {...props} />} />
+                <Route path="/products" render={(props) => <UserProducts auth={auth} {...props} />} />
             </div>
         </Router>
     );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {getRecipes} from "../actions/RecipeActions";
-import {Col, Grid, Modal, ProgressBar, Well} from "react-bootstrap";
+import {Col, Modal, ProgressBar, Well} from "react-bootstrap";
 
 class RecipesList extends Component {
 

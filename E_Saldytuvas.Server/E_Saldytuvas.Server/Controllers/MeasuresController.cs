@@ -22,7 +22,13 @@ namespace E_Saldytuvas.Server.Controllers
             if (!_dbContext.Measures.Any())
             {
                 _dbContext.Measures
-                    .Add(new Measure { Name = "Kg" });
+                    .Add(new Measure { Name = "kg" });
+                _dbContext.Measures
+                    .Add(new Measure { Name = "g" });
+                _dbContext.Measures
+                    .Add(new Measure { Name = "l" });
+                _dbContext.Measures
+                    .Add(new Measure {Name = "ml"});
 
                 _dbContext.SaveChanges();
             }

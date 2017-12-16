@@ -29,13 +29,6 @@ namespace E_Saldytuvas.Server.Services
 
         public IEnumerable<Recipe> GetUserRecipes(long userId)
         {
-            /*var user = _dbContext.Users
-                .Include(u => u.Recipes)
-                .SingleOrDefault(u => u.Id == userId);
-
-            if(user == null)
-                throw new Exception("User not found");*/
-
             var recipes = _dbContext.Recipes
                 .Include(r => r.Ingredients)
                 .Where(r => r.User.Id == userId)

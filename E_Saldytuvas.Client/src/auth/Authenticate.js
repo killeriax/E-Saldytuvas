@@ -25,7 +25,7 @@ class Authenticate extends React.Component {
 
         return isAuthenticated ? <Redirect to={{
             pathname: '/home'
-        }}/> : <ProgressBar active now={50} />;
+        }}/> : <ProgressBar bsStyle="success" active now={50} />;
     }
 }
 

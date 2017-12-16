@@ -10,12 +10,10 @@ import auth from '../auth/Auth';
 export const getCurrentUser = async () => {
     try {
         const userId = await getUserId();
-        console.log(userId);
 
         const response = await api.get(USER_URL.replace(':userId',userId), {authorized: true});
 
         const json = await response.json();
-        console.log(json);
 
         if (!response.ok) {
             throw new Error(json);
@@ -52,20 +50,6 @@ export const getUserId = async () => {
     try {
         const response = await api.get(USER_ID_URL, {authorized: true});
         const json = await response.json();
-        if (!response.ok) {
-            throw new Error(json);
-        }
-        return json;
-    } catch (err) {
-        console.error('Could not register a user', err);
-    }
-};
-
-export const fetchUserId = () => {
-    try {
-        const response = api.get(USER_ID_URL, {authorized: true});
-        const json = response.json();
-        console.log(json);
         if (!response.ok) {
             throw new Error(json);
         }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
-using Microsoft.EntityFrameworkCore;
 using E_Saldytuvas.Server.Services;
 
 namespace E_Saldytuvas.Server.Controllers
@@ -20,10 +20,10 @@ namespace E_Saldytuvas.Server.Controllers
             _dbContext = dbContext;
             _ingredientService = ingredientService;
 
-            if (_dbContext.Ingredients.Count() == 0)
+            if (!_dbContext.Ingredients.Any())
             {
                 _dbContext.Ingredients
-                    .Add(new Ingredient { Name = "Sūris", Amount = 200, Measure = _dbContext.Measures.FirstOrDefault(m => m.Id == 1) });
+                    .Add(new Ingredient { Name = "Sūris", Amount = 200, Measure = _dbContext.Measures.FirstOrDefault(m => m.Id == 1), UserId = 1});
 
                 _dbContext.SaveChanges();
             }
@@ -93,6 +93,19 @@ namespace E_Saldytuvas.Server.Controllers
             }
 
             return new NoContentResult();
+        }
+
+        [HttpGet("user/{userId}")]
+        public IEnumerable<Ingredient> GetUserIngredients(long userId)
+        {
+            try
+            {
+                return _ingredientService.GetUserIngredients(userId);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

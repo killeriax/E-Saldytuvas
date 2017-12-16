@@ -20,7 +20,9 @@ namespace E_Saldytuvas.Server.Models
         [MaxLength(50)]
         public string Email { get; set; }
 
+        [JsonIgnore]
         public List<Ingredient> Ingredients { get; set; }
+
         [JsonIgnore]
         public List<Recipe> Recipes { get; set; }
 

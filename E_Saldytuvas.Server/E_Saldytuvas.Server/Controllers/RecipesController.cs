@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using E_Saldytuvas.Server.Data;
 using E_Saldytuvas.Server.Models;
 using E_Saldytuvas.Server.Services;
 

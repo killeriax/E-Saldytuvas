@@ -14,5 +14,8 @@ namespace E_Saldytuvas.Server.Models
         public double Amount { get; set; }
 
         public Measure Measure { get; set; }
+
+        public int UserId { get; set; }
+        public User User { get; set; }
     }
 }

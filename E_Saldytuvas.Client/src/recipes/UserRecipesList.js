@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {getUserRecipes} from "../actions/RecipeActions";
-import {Button, Col, FormControl, Glyphicon, Modal, ProgressBar, Well} from "react-bootstrap";
+import {Col, Glyphicon, Modal, ProgressBar, Well} from "react-bootstrap";
 import {getUserId} from "../actions/UserActions";
 import NewRecipeForm from "./NewRecipeForm";
 
@@ -47,13 +47,14 @@ class UserRecipesList extends Component {
         if (recipe.imageUrl) {
             return <img alt="Patiekalo nuotrauka" height="200" width="100%" src={`${recipe.imageUrl}`} />;
         }
-        return <img alt="Patiekalo nuotrauka" height="100%" width="100%" src={`https://static.pexels.com/photos/376464/pexels-photo-376464.jpeg`} />;
+        else
+            return <img alt="Patiekalo nuotrauka" height="100%" width="100%" src={`https://static.pexels.com/photos/376464/pexels-photo-376464.jpeg`} />;
     }
 
 
     render() {
         let recipes = this.state.userRecipes;
-        debugger;
+
         if (!recipes) {
             return <ProgressBar bsStyle="success" active now={45} />
         }
@@ -66,16 +67,13 @@ class UserRecipesList extends Component {
                             <p><a className="btn btn-success" onClick={() => this.open(index)}><Glyphicon glyph="edit"/> Redaguoti </a>
                                 <a className="btn btn-danger" onClick={() => this.deleteRecipe(recipe.id)}><Glyphicon glyph="remove"/></a></p>
                         </Well>
-
                     </Col>
                     <Modal show={this.state.showModal[index]} onHide={() => this.close(index)}>
                         <Modal.Header closeButton>
                             <Modal.Title> Redaguoti receptą </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-
-                            <NewRecipeForm title={recipe.title} description={recipe.description} {...this.props}/>
-
+                            <NewRecipeForm edit={true} title={recipe.title} description={recipe.description} {...this.props}/>
                         </Modal.Body>
                     </Modal>
                 </div>
